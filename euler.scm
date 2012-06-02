@@ -1,4 +1,5 @@
 (define (id x) x)
+(define (k x) (lambda _ x))
 
 (define (divisible-by-p n)
  (lambda (x) (= (modulo x n) 0)))
@@ -13,7 +14,23 @@
 (define (upto n)
  (build-list n id))
 
+(define (integers-in min max)
+  (if (> min max) '()
+      (cons min (integers-in (+ min 1) max))))
+
 (define (sum ls) (foldl + 0 ls))
+(define (product ls) (foldl * 1 ls))
+(define (appearances ls n)
+  (if (null? ls) 0
+      (+ (if (= (car ls) n) 1 0)
+	 (appearances (cdr ls) n))))
+(define (uniqify ls)
+  (if (null? ls) '()
+      (cons (car ls)
+	    (filter (lambda (x) (eq? x (car ls))) (cdr ls)))))
+(define (most-appearances ls v)
+  (appearances (argmax (lambda (x) (appearances x v)) ls) v
+	       ))
 
 (define (find-factor n)
  (let loop ((d 2))
@@ -36,6 +53,10 @@
       (and (char=? (string-ref s 0)
 		   (string-ref s (- (string-length s) 1)))
 	   (palindrome? (substring s 1 (- (string-length s) 1))))))
+
+(define (smallest p)
+  (let loop ((n 0))
+    (if (p n) n (loop (+ n 1)))))
 
 ; Crosses a pair of lists using function f. The result list contains (f x y) for
 ; all x in l1 and all y in l2.
@@ -88,3 +109,18 @@
 (define (solve-4)
   (max (filter (lambda (x) (palindrome? (number->string x)))
 	       (cross * (upto 1000) (upto 1000)))))
+
+; Problem 5: Smallest integer divisible by all of [1,20]
+; Approach: factorize each of [1,20], and for each prime factor, choose the
+; highest power.
+(define (solve-5)
+ (let* ((range (integers-in 1 20))
+	(facts (map factorize range))
+	(powers (map (lambda (f) (cons f (most-appearances facts f))) range)))
+   (product
+    (append*
+     (map
+      (lambda (fp)
+	(build-list (cdr fp) (k (car fp))))
+      powers)))
+))
