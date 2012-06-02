@@ -18,6 +18,8 @@
   (if (> min max) '()
       (cons min (integers-in (+ min 1) max))))
 
+(define (square x) (* x x))
+
 (define (sum ls) (foldl + 0 ls))
 (define (product ls) (foldl * 1 ls))
 (define (appearances ls n)
@@ -124,3 +126,9 @@
 	(build-list (cdr fp) (k (car fp))))
       powers)))
 ))
+
+; Problem 6
+(define (solve-6)
+  (let ((range (integers-in 1 100)))
+    (- (square (sum range))
+       (sum (map square range)))))
