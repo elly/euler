@@ -15,6 +15,22 @@
 
 (define (sum ls) (foldl + 0 ls))
 
+(define (find-factor n)
+ (let loop ((d 2))
+   (if (> d (/ n 2))
+       #f
+       (if (= (modulo n d) 0)
+	   d
+	   (loop (+ d 1))))))
+
+(define (factorize n)
+  (let ((f (find-factor n)))
+    (if f
+	(cons f (factorize (/ n f)))
+	(list n))))
+
+(define (max l) (argmax id l))
+
 ; A stream is represented as a single function which returns successive values
 ; of the stream.
 (define (stream-take s n)
@@ -48,3 +64,7 @@
  (sum
   (filter even?
 	  (stream-take-while (fib-stream) (<-p 4000000)))))
+
+; Problem 3: Largest prime factor of 600851475143
+(define (solve-3)
+  (max (factorize 600851475143)))
