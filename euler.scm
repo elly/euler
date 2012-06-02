@@ -36,7 +36,7 @@
 
 (define (find-factor n)
  (let loop ((d 2))
-   (if (> d (/ n 2))
+   (if (> d (sqrt n))
        #f
        (if (= (modulo n d) 0)
 	   d
@@ -48,6 +48,8 @@
 	(cons f (factorize (/ n f)))
 	(list n))))
 
+(define (prime? n) (and (> n 1) (not (find-factor n))))
+
 (define (max l) (argmax id l))
 
 (define (palindrome? s)
@@ -56,9 +58,15 @@
 		   (string-ref s (- (string-length s) 1)))
 	   (palindrome? (substring s 1 (- (string-length s) 1))))))
 
+(define (nth-smallest n p)
+  (let loop ((c 0)
+	     (i 0))
+    (if (p i)
+	(if (= c n) i
+	    (loop (+ c 1) (+ i 1)))
+	(loop c (+ i 1)))))
 (define (smallest p)
-  (let loop ((n 0))
-    (if (p n) n (loop (+ n 1)))))
+  (nth-smallest 0 p))
 
 ; Crosses a pair of lists using function f. The result list contains (f x y) for
 ; all x in l1 and all y in l2.
@@ -132,3 +140,7 @@
   (let ((range (integers-in 1 100)))
     (- (square (sum range))
        (sum (map square range)))))
+
+; Problem 7
+(define (solve-7)
+  (nth-smallest 10000 prime?))
