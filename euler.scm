@@ -31,6 +31,21 @@
 
 (define (max l) (argmax id l))
 
+(define (palindrome? s)
+  (if (< (string-length s) 2) #t
+      (and (char=? (string-ref s 0)
+		   (string-ref s (- (string-length s) 1)))
+	   (palindrome? (substring s 1 (- (string-length s) 1))))))
+
+; Crosses a pair of lists using function f. The result list contains (f x y) for
+; all x in l1 and all y in l2.
+(define (cross f l1 l2)
+  (append*
+   (map
+    (lambda (x)
+      (map (lambda (y) (* x y)) l2))
+    l1)))
+
 ; A stream is represented as a single function which returns successive values
 ; of the stream.
 (define (stream-take s n)
@@ -68,3 +83,8 @@
 ; Problem 3: Largest prime factor of 600851475143
 (define (solve-3)
   (max (factorize 600851475143)))
+
+; Problem 4: Largest palindrome that is the product of two 3-digit numbers
+(define (solve-4)
+  (max (filter (lambda (x) (palindrome? (number->string x)))
+	       (cross * (upto 1000) (upto 1000)))))
