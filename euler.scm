@@ -9,7 +9,7 @@
 
 (define (or/p . preds)
  (lambda (val)
-   (ormap (lambda (p) (apply p (list val))) preds)))
+   (ormap (lambda (p) (p val)) preds)))
 
 (define (upto n)
  (build-list n id))
@@ -74,7 +74,7 @@
   (append*
    (map
     (lambda (x)
-      (map (lambda (y) (* x y)) l2))
+      (map (lambda (y) (f x y)) l2))
     l1)))
 
 ; A stream is represented as a single function which returns successive values
@@ -156,3 +156,9 @@
 			      (string->list x)))
 		       substrings)))
     (max (map product sublists))))
+
+; Problem 9: given a < b < c, a^2 + b^2 = c^2, and a + b + c = 1000,
+; find a * b * c.
+; Approach: find a, b, and c by O(n^3) brute-force. There aren't many
+; pythagorean triples with c < 1000.
+(define (solve-9) 0)
