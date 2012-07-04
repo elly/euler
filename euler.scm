@@ -159,6 +159,30 @@
 
 ; Problem 9: given a < b < c, a^2 + b^2 = c^2, and a + b + c = 1000,
 ; find a * b * c.
-; Approach: find a, b, and c by O(n^3) brute-force. There aren't many
-; pythagorean triples with c < 1000.
-(define (solve-9) 0)
+; Approach: Try each value of a up to 333. For each value of a, try each value
+; of b from a up to 500; check if (= (+ a b c) 1000).
+
+(define (good-triple? a b c)
+  (= (+ a b c) 1000))
+
+(define (good-pair? a b)
+  (let ((c (sqrt (+ (square a) (square b)))))
+    (if (= (floor c) c)
+	(good-triple? a b c)
+	#f)))
+
+(define (solve-9)
+  (let outer ((a 1))
+    (let inner ((b a))
+      (if (good-pair? a b)
+	  (* a b (sqrt (+ (square a) (square b))))
+	  (if (> b 500)
+	      (if (> a 333)
+		  #f
+		  (outer (+ a 1)))
+	      (inner (+ b 1)))))))
+
+; Sum of all primes below 2000000.
+(define (solve-10)
+  (sum
+   (filter prime? (upto 2000000))))
