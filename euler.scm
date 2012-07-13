@@ -48,6 +48,14 @@
 	(cons f (factorize (/ n f)))
 	(list n))))
 
+(define (divisors-a n i)
+  (if (> i n) '()
+   (if (= (modulo n i) 0)
+       (cons i (divisors-a n (+ i 1)))
+       (divisors-a n (+ i 1)))))
+
+(define (divisors n) (divisors-a n 1))
+
 (define (prime? n) (and (> n 1) (not (find-factor n))))
 
 (define (max l) (argmax id l))
@@ -244,3 +252,14 @@
 (define (solve-11)
   (max
    (map (lambda (x) (best-row-walk grid x)) (upto (length grid)))))
+
+; Problem 12: First number in sequence defined by n_i = n_{i - 1} + i, n_0 = 0
+; to have more than 500 divisors.
+; N.B.: There has to be a better algorithm for this. This one is stupid and
+; takes _forever_ (like an hour).
+
+(define (solve-12)
+  (let loop ((n 0) (i 1))
+    (if (> (length (divisors (+ n i))) 500)
+	(+ n i)
+	(loop (+ n i) (+ i 1)))))
