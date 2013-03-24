@@ -516,7 +516,7 @@
 (define (proper-divisors n)
   (filter (lambda (x) (not (= x n))) (divisors n)))
 
-(define (p-20-d n)
+(define (p-21-d n)
   (sum (proper-divisors n)))
 
 (define (amicables)
@@ -532,5 +532,5 @@
 	    (loop (+ n 1)
 		  vs)))))
 
-(define (solve-20)
+(define (solve-21)
   (sum (amicables)))
