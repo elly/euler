@@ -69,6 +69,9 @@
 
 (define (max l) (argmax id l))
 
+(define (list-ref2 l x y)
+  (list-ref (list-ref l x) y))
+
 (define (palindrome? s)
   (if (< (string-length s) 2) #t
       (and (char=? (string-ref s 0)
@@ -457,3 +460,77 @@
 	    (apply string-append
 		   (map number->english
 			(integers-in 1 1000)))))))
+
+(define p-18-triangle
+  (list
+   (list               75)
+   (list              95 64)
+   (list             17 47 82)
+   (list            18 35 87 10)
+   (list           20 04 82 47 65)
+   (list          19 01 23 75 03 34)
+   (list         88 02 77 73 07 63 67)
+   (list        99 65 04 28 06 16 70 92)
+   (list       41 41 26 56 83 40 80 70 33)
+   (list      41 48 72 33 47 32 37 16 94 29)
+   (list     53 71 44 65 25 43 91 52 97 51 14)
+   (list    70 11 33 28 77 73 17 78 39 68 17 57)
+   (list   91 71 52 38 17 14 91 43 58 50 27 29 48)
+   (list  63 66 04 68 89 53 67 30 73 16 69 87 40 31)
+   (list 04 62 98 27 23 09 70 98 73 93 38 53 60 04 23)))
+
+; get-paths (1) (2 3) (4 5 6) ->
+; (1 2 4) (1 2 5) (1 3 5) (1 3 6)
+(define (get-paths t depth index)
+  (if (= depth (length t))
+      (list (list-ref2 t depth index))
+      (list 'not-done-yet)))
+
+(define (solve-18) 0)
+
+(define (leap-year? y)
+  (or (= 0 (modulo y 400))
+      (and (not (= 0 (modulo y 100)))
+	   (= 0 (modulo y 4)))))
+
+(define (month-length y m)
+  (case m
+    ((8 3 5 10) 30)
+    ((1) (if (leap-year? y) 29 28))
+    (else 31)))
+
+(define (year-length y)
+  (if (leap-year? y) 366 365))
+
+; Starting sunday: Jan 7 1900 (y 0 d 6)
+
+; Accepts a day index from our epoch (jan 1 1900 = 0); returns a (year
+; month day-of-month) 
+(define (day->ypos d) #f)
+
+(define (solve-19) 0)
+
+; d(n) = sum of all proper divisors of n
+; d(a) = b and d(b) = a and a != b -> a, b amicable
+
+(define (proper-divisors n)
+  (filter (lambda (x) (not (= x n))) (divisors n)))
+
+(define (p-20-d n)
+  (sum (proper-divisors n)))
+
+(define (amicables)
+  (let loop ((n 0)
+	     (vs '()))
+    
+    (if (>= n 10000)
+	vs
+	(if (and (= (p-20-d (p-20-d n)) n)
+		 (not (= n (p-20-d n))))
+	    (loop (+ n 1)
+		  (cons n vs))
+	    (loop (+ n 1)
+		  vs)))))
+
+(define (solve-20)
+  (sum (amicables)))
