@@ -11,6 +11,10 @@
  (lambda (val)
    (ormap (lambda (p) (p val)) preds)))
 
+(define (and/p . preds)
+  (lambda (val)
+    (andmap (lambda (p) (p val)) preds)))
+
 (define (upto n)
  (build-list n id))
 
@@ -33,6 +37,11 @@
 (define (most-appearances ls v)
   (appearances (argmax (lambda (x) (appearances x v)) ls) v
 	       ))
+
+(define (letter? c)
+  (or
+   (and (char<=? #\a c) (char>=? #\z c))
+   (and (char<=? #\A c) (char>=? #\Z c))))
 
 (define (find-factor n)
  (let loop ((d 2))
@@ -374,3 +383,77 @@
        (number->string
 	(sum numbers)))
       10))))
+
+; Problem 17: letters used to translate integers 1 -> 1000 into
+; English.
+
+(define (tens-place-name x)
+  (case x
+    ((2) "twenty")
+    ((3) "thirty")
+    ((4) "forty")
+    ((5) "fifty")
+    ((6) "sixty")
+    ((7) "seventy")
+    ((8) "eighty")
+    ((9) "ninety")))
+
+(define (ones-place-name x)
+  (case x
+    ((0) "zero")
+    ((1) "one")
+    ((2) "two")
+    ((3) "three")
+    ((4) "four")
+    ((5) "five")
+    ((6) "six")
+    ((7) "seven")
+    ((8) "eight")
+    ((9) "nine")
+    ((10) "ten")
+    ((11) "eleven")
+    ((12) "twelve")
+    ((13) "thirteen")
+    ((14) "fourteen")
+    ((15) "fifteen")
+    ((16) "sixteen")
+    ((17) "seventeen")
+    ((18) "eighteen")
+    ((19) "nineteen")))
+
+; Translates the supplied number into English. Only well-defined for
+; numbers 0 <= x <= 1000.
+(define (number->english x)
+  (let ((n->e number->english)
+	(s-a string-append))
+    (cond ((>= x 1000)
+	   (s-a (n->e (floor (/ x 1000)))
+		" thousand "
+		(if (not (= 0 (modulo x 1000)))
+		    (n->e (modulo x 1000))
+		    "")))
+	  ((>= x 100)
+	   (s-a (n->e (floor (/ x 100)))
+		" hundred "
+		(if (not (= 0 (modulo x 100)))
+		    (if (not (= 0 (modulo x 100)))
+			(s-a "and "
+			     (n->e (modulo x 100)))
+			"")
+		    "")))
+	  ((>= x 20)
+	   (s-a (tens-place-name (floor (/ x 10)))
+		(if (not (= 0 (modulo x 10)))
+		    (s-a "-"
+			 (n->e (modulo x 10)))
+		    "")))
+	  ((>= x 0)
+	   (ones-place-name x)))))
+
+(define (solve-17)
+  (length
+   (filter letter?
+	   (string->list
+	    (apply string-append
+		   (map number->english
+			(integers-in 1 1000)))))))
