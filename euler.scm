@@ -534,3 +534,30 @@
 
 (define (solve-21)
   (sum (amicables)))
+
+; Problem 22: positional alpha-score
+(define (ascore w)
+  (sum
+   (map
+    (lambda (x) (+ 1 (- (char->integer x) (char->integer #\A))))
+    (string->list w))))
+
+(define (p22-names)
+  (call-with-input-file "p22.txt"
+    (lambda (p)
+      (let ((names (read-string 1048576 p)))
+	(sort
+	 (map
+	  (lambda (s) (string-trim s "\""))
+	  (string-split names ","))
+	 string<?)))))
+
+(define (solve-22)
+  (foldl
+   (lambda (x n)
+     (let ((total (car n))
+	   (index (cdr n)))
+       (cons (+ total (* (ascore x) index))
+	     (+ index 1))))
+   (cons 0 1)
+   (p22-names)))
