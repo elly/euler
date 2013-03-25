@@ -6,6 +6,8 @@
 
 (define (<-p n)
   (lambda (x) (< x n)))
+(define (=-p n)
+  (lambda (x) (= x n)))
 
 (define (or/p . preds)
  (lambda (val)
@@ -561,3 +563,41 @@
 	     (+ index 1))))
    (cons 0 1)
    (p22-names)))
+
+; Problem 23: non-abundant sums
+(define (abundant? n)
+  (< n (sum (proper-divisors n))))
+
+(define (p23-abundants)
+  (filter abundant? (upto 28123)))
+
+(define (findn-ordered l n)
+  (if (or (null? l)
+	  (> n (car l)))
+      #f
+      (if (= n (car l))
+	  #t
+	  (findn-ordered (cdr l) n))))
+
+(define (is-pair-sum abundants rev-abundants n)
+  (if (or (null? abundants)
+	  (null? (cdr abundants))
+	  (< n (car abundants)))
+      #f
+      (let ((d (- n (car abundants))))
+	(or (findn-ordered rev-abundants d)
+	    (is-pair-sum (cdr abundants) rev-abundants n)))))
+
+(define (non-abundant-sums)
+  (let* ((abundants (p23-abundants))
+	 (rev-abundants (reverse abundants)))
+    (filter
+     (lambda (p)
+       (begin
+	 (if (= 0 (modulo p 100))
+	     (printf "~a~n" p)
+	     #f)
+	 (not (is-pair-sum abundants rev-abundants p))))
+     (upto 28124))))
+
+(define (solve-23) (sum (non-abundant-sums)))
