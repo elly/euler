@@ -60,7 +60,7 @@
 	(list n))))
 
 (define (divisors-a n i)
-  (if (> i n) '()
+  (if (> i (sqrt n)) '()
    (if (= (modulo n i) 0)
        (cons i (divisors-a n (+ i 1)))
        (divisors-a n (+ i 1)))))
@@ -601,3 +601,11 @@
      (upto 28124))))
 
 (define (solve-23) (sum (non-abundant-sums)))
+
+(define (less-than-1000-digits n)
+  (< (string-length (number->string n)) 1000))
+
+(define (solve-25)
+  (let* ((s (stream-take-while (fib-stream) less-than-1000-digits))
+         (l (length s)))
+   (+ l 2)))
