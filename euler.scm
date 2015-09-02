@@ -610,6 +610,15 @@
          (l (length s)))
    (+ l 2)))
 
+(define (solve-29)
+  (let ((vals (mutable-set)))
+    (let loop0 ((a 2))
+      (let loop1 ((b 2))
+        (let ((res (expt a b)))
+          (set-add! vals res))
+        (if (= b 100) (set-count vals) (loop1 (+ b 1))))
+    (if (= a 100) (set-count vals) (loop0 (+ a 1))))))
+
 (define (nc v n)
   (if (< n 0)
       0
