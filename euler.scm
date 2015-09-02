@@ -609,3 +609,23 @@
   (let* ((s (stream-take-while (fib-stream) less-than-1000-digits))
          (l (length s)))
    (+ l 2)))
+
+(define (nc v n)
+  (if (< n 0)
+      0
+      (vector-ref v n)))
+
+(define (mkc v n)
+  (sum (map (lambda (x) (nc v (- n x)))
+            '(1 2 5 10 20 50 100 200))))
+
+(define (solve-31)
+  (let ((ns (make-vector 201 0)))
+    (vector-set! ns 0 1)
+    (let loop ((n 1))
+      (vector-set! ns n (mkc ns n))
+      (printf "~a -> ~a~n" n (nc ns n))
+      (if (>= n (- (vector-length ns) 1))
+          0
+          (loop (+ n 1))))
+    (vector-ref ns 200)))
