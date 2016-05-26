@@ -2,18 +2,23 @@
 #include <stdlib.h>
 
 int main() {
-	int v = 1;
-	int d = 2;
-	int n = 0;
-	int t = 0;
-	while (n < ) {
-		for (int i = 0; i < 4 && n + i < 9; ++i) {
-			t += v;
-			v += d;
-		}
-		d += 2;
-		n += 4;
+	int i = 0;
+	int sum = 0;
+	int delta = 2;
+	int j = 1;
+	const int DIM = 500 * 4;
+	sum += j;
+	for (i = 0; i < DIM; i += 4) {
+		j += delta;
+		sum += j;
+		j += delta;
+		sum += j;
+		j += delta;
+		sum += j;
+		j += delta;
+		sum += j;
+		delta += 2;
 	}
-	printf("%d\n", t);
+	printf("%d\n", sum);
 	return 0;
 }
