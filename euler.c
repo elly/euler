@@ -41,3 +41,21 @@ int ispandigital(int n) {
 			return 0;
 	return 1;
 }
+
+int sieve(int *p, int *q, int n) {
+	int r = 0;
+	int i;
+	int j;
+
+	for (i = 1; i < n; i++)
+		p[i] = 1;
+	for (i = 2; i < n; i++) {
+		if (!p[i])
+			continue;
+		q[r++] = i;
+		for (j = i; j < n; j += i)
+			p[j] = 0;
+	}
+
+	return r;
+}
